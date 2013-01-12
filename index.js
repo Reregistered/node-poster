@@ -37,7 +37,9 @@ function getFormDataForPost(fields, files) {
     for (var key in files) {
       var value = files[key];
       post_data.push(new Buffer(encodeFilePart(boundary, value.type, value.keyname, value.valuename), 'ascii'));
-      post_data.push(new Buffer(value.data, 'utf8'))
+      // check if we should post as binary data.
+      var enc = (value.type == 'application/octet-stream') ? 'binary' : 'utf8';
+      post_data.push(new Buffer(value.data, enc))
     }
   }
   post_data.push(new Buffer("\r\n--" + boundary + "--"), 'ascii');
